@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MontyHall.MainPage">
+    
+    <Shell.TitleView>
+        <Label Text="Monty Hall Game" 
+               HorizontalTextAlignment="Center"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="35" />
+    </Shell.TitleView>
+    
+    <ScrollView>
+        <Frame x:Name="AppPage">
+            <StackLayout>
+                
+                <VerticalStackLayout x:Name="WelcomeScreen">
+                    <ImageButton Source="mhwelcome.webp" Clicked="Welcome_Loaded" 
+                                 MaximumHeightRequest="600" MaximumWidthRequest="600" />
+                    <Button Text="Click to proceed" FontSize="50" TextColor="Blue" Clicked="Welcome_Loaded" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="SplashScreen" Opacity="0" IsVisible="false">
+                    <ImageButton Source="mhsplash.gif" Clicked="MainPage_Loaded" />
+                    <Button Text="Got it" FontSize="50" TextColor="Blue" Clicked="MainPage_Loaded" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout x:Name="StartPage" HorizontalOptions="Center" Opacity="0" IsVisible="false">
+                    <Frame BackgroundColor="LightGray" HeightRequest="350">
+                        <HorizontalStackLayout x:Name="MHGame" HorizontalOptions="Center" Spacing="30">
+                            <ImageButton x:Name="Door1" Source="door1.png" Clicked="OnDoor1Clicked" 
+                                         CornerRadius="20" MaximumWidthRequest="300"
+                                         MaximumHeightRequest="350" VerticalOptions="Center"/>
+                            <ImageButton x:Name="Door2" Source="door2.png" Clicked="OnDoor2Clicked" 
+                                         CornerRadius="20" MaximumWidthRequest="300"
+                                         MaximumHeightRequest="350" VerticalOptions="Center"/>
+                            <ImageButton x:Name="Door3" Source="door3.png" Clicked="OnDoor3Clicked" 
+                                         CornerRadius="20" MaximumWidthRequest="300" MaximumHeightRequest="350"
+                                         VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+                    <Frame>
+                        <HorizontalStackLayout Spacing="230" >
+                            <Label x:Name="LabelGamesPlayed" Text="Games played = 0" FontAttributes="Bold" FontSize="20" />
+                            <Label x:Name="LabelGamesWon" Text="Games won = 0" FontAttributes="Bold" FontSize="20" />
+                            <Label x:Name="LabelGamesLost" Text="Games lost = 0" FontAttributes="Bold" FontSize="20" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                    <Frame>
+                        <HorizontalStackLayout Spacing="140">
+                            <Label Text="Welcome to the Monty Hall Game!" TextDecorations="Underline"
+                                   SemanticProperties.HeadingLevel="Level2"
+                                   FontSize="18"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Play the mini-game if you want, or run the simulation below."
+                                   TextDecorations="Underline"
+                                   SemanticProperties.HeadingLevel="Level2"
+                                   FontSize="18"
+                                   HorizontalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                    <Frame>
+                        <HorizontalStackLayout
+                            HorizontalOptions="CenterAndExpand" Spacing="50">
+                            <Label Text="Number of simulated games? ( > 1000000 is advised )"
+                                   x:Name="NSimulationsLabel" SemanticProperties.HeadingLevel="Level2"
+                                   FontSize="18" HorizontalOptions="Center" />
+                            <Editor x:Name="NSimulations" PropertyChanged="OnNSimulationsChange"
+                                    WidthRequest="100" MaxLength="9" Text="1000000" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                    <Frame>
+                        <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="50">
+                            <Label Text="Should the door be changed?" SemanticProperties.HeadingLevel="Level2"
+                                   FontSize="18" HorizontalOptions="Center" />
+                            <CheckBox Color="LightBlue" x:Name="IsDoorChange"/>
+                            <Label Text="How many doors you want to use?" SemanticProperties.HeadingLevel="Level2"
+                                   FontSize="18" HorizontalOptions="Center" x:Name="NDoorsLabel" />
+                            <Editor x:Name="NDoors" PropertyChanged="OnNDoorsChange"
+                                    WidthRequest="100"
+                                    MaxLength="5"
+                                    Text="3" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                    <Frame>
+                        <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="50">
+                            <Button x:Name="SimulationStartBtn" Text="Run simulation"
+                                    FontSize="20" SemanticProperties.Hint="Counts the number of times you click"
+                                    Clicked="OnSimulationStartClicked" HorizontalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+                
+                <VerticalStackLayout x:Name="LoadingPage" Opacity="0" IsVisible="false">
+                    <ImageButton Source="loading.gif" MaximumHeightRequest="600" MaximumWidthRequest="600"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout x:Name="SimulationPage" VerticalOptions="CenterAndExpand" IsVisible="false" Opacity="0">
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="50">
+                        <Label Text="Simulations ran: " SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" HorizontalOptions="Center" />
+                        <Label Text="" SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" x:Name="SimulationsRan" HorizontalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="70">
+                        <Label Text="Was door changed: " SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" HorizontalOptions="Center" />
+                        <Label Text="" SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" x:Name="WasDoorOpened"
+                               HorizontalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="50">
+                        <Label Text=" Your win rate: "
+                               SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18"
+                               HorizontalOptions="Center" />
+                        <Label Text=""
+                               SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" x:Name="WinRate"
+                               HorizontalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="50">
+                        <Label Text="Your lose rate: "
+                               SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18"
+                               HorizontalOptions="Center" />
+                        <Label Text=""
+                               SemanticProperties.HeadingLevel="Level2"
+                               FontSize="18" x:Name="LoseRate"
+                               HorizontalOptions="Center" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+                
+            </StackLayout>
+        </Frame>
+        
+    </ScrollView>
+    
+</ContentPage>
