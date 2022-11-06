@@ -9,11 +9,13 @@ What was used --><br>
 
 This graphical app consists of the top part which contains **the actual game** with a Win/Loss counter, and the bottom part which contains a **customizable simulator** to find the best winning strategy<br><br>
 
-The simulator part runs the same logic as the actual game the number of times chosen by the user.<br>
+The simulator part runs the same logic as the actual game the number of times chosen by the user.<br><br>
+
+Why was **multi-threading** NOT cosidered necessary:<br>
 A method to use parallelism is included for performance testing but not used since parallel threads were slower than a single thread (still external to the main app).<br>
 A likely explaination is that the logic for a single game iteration is so fast that the overhead of thread management is actually higher than the performance boost received.<br>
 No particular logic for thread parallelism was considered necessary even in static methods since all shared data were stack items as numbers.
-<br>
+<br><br>
 
 Here is a demonstration of the game:
 
